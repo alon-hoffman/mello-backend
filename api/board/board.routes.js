@@ -14,8 +14,8 @@ router.put('/:id', updateBoard)
 router.delete('/:id', removeBoard)
 // router.delete('/:id', requireAuth, requireAdmin, removeBoard)
 
-router.post('/:id/msg', requireAuth, addBoardMsg)
-router.delete('/:id/msg/:msgId', requireAuth, removeBoardMsg)
+router.post('/:id/msg', addBoardMsg)
+router.delete('/:id/msg/:msgId', removeBoardMsg)
 
 module.exports = router
 
