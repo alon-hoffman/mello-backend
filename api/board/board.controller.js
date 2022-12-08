@@ -6,9 +6,12 @@ async function getBoards(req, res) {
   try {
     logger.debug('Getting Boards')
     const filterBy = {
-      title: req.query.title || ''
+      title: req.query.title || '',
+      user:req.loggedinUser||''
     }
     req.loggedinUser
+    console.log(`req.loggedinUser = `, req.loggedinUser)
+
     const boards = await boardService.query(filterBy)
     res.json(boards)
   } catch (err) {

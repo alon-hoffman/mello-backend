@@ -2,10 +2,15 @@ const dbService = require('../../services/db.service')
 const logger = require('../../services/logger.service')
 const utilService = require('../../services/util.service')
 const ObjectId = require('mongodb').ObjectId
+// const authService = require('../auth/auth.service')
 
-async function query(filterBy={title:''}) {
+async function query(filterBy={title:'',user:''}) {
+    // const loggedinUser = authService.validateToken(req.cookies.loginToken)
+    // console.log(`loggedinUser = `, loggedinUser)
+    // console.log(`foo = `, foo)
     try {
         const criteria = {
+            $or : [ { "members.fullname" : filterBy.user.fullname } ]
             // vendor: { $regex: filterBy.title, $options: 'i' }
         }
         const collection = await dbService.getCollection('board')

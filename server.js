@@ -3,12 +3,6 @@ const express = require('express')
 const cors = require('cors')
 const path = require('path')
 const cookieParser = require('cookie-parser')
-const config = require('./config/index.js')
-
-console.log('before',config.isGuestMode)
-config.isGuestMode = false
-console.log('after',config.isGuestMode)
-
 const app = express()
 const http = require('http').createServer(app)
 
