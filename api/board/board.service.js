@@ -5,14 +5,13 @@ const ObjectId = require('mongodb').ObjectId
 // const authService = require('../auth/auth.service')
 
 async function query(filterBy={title:'',user:''}) {
-    // const loggedinUser = authService.validateToken(req.cookies.loginToken)
-    // console.log(`loggedinUser = `, loggedinUser)
-    // console.log(`foo = `, foo)
+//    console.log(`filterBy = `, filterBy)
     try {
-        const criteria = {
+        let criteria = {
             $or : [ { "members.fullname" : filterBy.user.fullname } ]
             // vendor: { $regex: filterBy.title, $options: 'i' }
         }
+        if(filterBy.user.fullname==='Guest') criteria={}
         const collection = await dbService.getCollection('board')
         var boards = await collection.find(criteria).toArray()
         return boards
