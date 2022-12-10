@@ -2,12 +2,16 @@ const dbService = require('../../services/db.service')
 const logger = require('../../services/logger.service')
 const utilService = require('../../services/util.service')
 const ObjectId = require('mongodb').ObjectId
+// const authService = require('../auth/auth.service')
 
-async function query(filterBy = { title: '' }) {
+async function query(filterBy = { title: '', user: '' }) {
+    //    console.log(`filterBy = `, filterBy)
     try {
-        const criteria = {
+        let criteria = {
+            $or: [{ "members.fullname": filterBy.user.fullname }]
             // vendor: { $regex: filterBy.title, $options: 'i' }
         }
+        if (filterBy.user.fullname === 'Guest') criteria = {}
         const collection = await dbService.getCollection('board')
         var boards = await collection.find(criteria).toArray()
         console.log("🚀 ~ file: board.service.js:13 ~ query ~ boards", boards)

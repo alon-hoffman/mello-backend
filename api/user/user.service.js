@@ -7,7 +7,7 @@ const ObjectId = require('mongodb').ObjectId
 module.exports = {
     query,
     getById,
-    getByUsername,
+    getByEmail,
     remove,
     update,
     add
@@ -51,13 +51,13 @@ async function getById(userId) {
         throw err
     }
 }
-async function getByUsername(username) {
+async function getByEmail(email) {
     try {
         const collection = await dbService.getCollection('user')
-        const user = await collection.findOne({ username })
+        const user = await collection.findOne({ email })
         return user
     } catch (err) {
-        logger.error(`while finding user by username: ${username}`, err)
+        logger.error(`while finding user by email: ${email}`, err)
         throw err
     }
 }
@@ -75,14 +75,18 @@ async function remove(userId) {
 async function update(user) {
     try {
         // peek only updatable properties
-        const userToSave = {
-            _id: ObjectId(user._id), // needed for the returnd obj
-            fullname: user.fullname,
-            score: user.score,
-        }
+        var id = ObjectId(user._id)
+        var temp= user._id
+        delete user._id
+        // const userToSave = {
+        //     _id: ObjectId(user._id), // needed for the returnd obj
+        //     fullname: user.fullname,
+        //     imgUrl: user.imgUrl,
+        // }
         const collection = await dbService.getCollection('user')
-        await collection.updateOne({ _id: userToSave._id }, { $set: userToSave })
-        return userToSave
+        await collection.updateOne({ _id: id }, { $set: user })
+        user._id=temp
+        return user
     } catch (err) {
         logger.error(`cannot update user ${user._id}`, err)
         throw err
@@ -93,11 +97,10 @@ async function add(user) {
     try {
         // peek only updatable fields!
         const userToAdd = {
-            username: user.username,
+            email: user.email,
             password: user.password,
             fullname: user.fullname,
             imgUrl: user.imgUrl,
-            score: 100
         }
         const collection = await dbService.getCollection('user')
         await collection.insertOne(userToAdd)
@@ -114,16 +117,16 @@ function _buildCriteria(filterBy) {
         const titleCriteria = { $regex: filterBy.title, $options: 'i' }
         criteria.$or = [
             {
-                username: titleCriteria
+                email: titleCriteria
             },
             {
                 fullname: titleCriteria
             }
         ]
     }
-    if (filterBy.minBalance) {
-        criteria.score = { $gte: filterBy.minBalance }
-    }
+    // if (filterBy.minBalance) {
+    //     criteria.score = { $gte: filterBy.minBalance }
+    // }
     return criteria
 }
 
