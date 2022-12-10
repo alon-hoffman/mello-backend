@@ -4,16 +4,17 @@ const utilService = require('../../services/util.service')
 const ObjectId = require('mongodb').ObjectId
 // const authService = require('../auth/auth.service')
 
-async function query(filterBy={title:'',user:''}) {
-//    console.log(`filterBy = `, filterBy)
+async function query(filterBy = { title: '', user: '' }) {
+    //    console.log(`filterBy = `, filterBy)
     try {
         let criteria = {
-            $or : [ { "members.fullname" : filterBy.user.fullname } ]
+            $or: [{ "members.fullname": filterBy.user.fullname }]
             // vendor: { $regex: filterBy.title, $options: 'i' }
         }
-        if(filterBy.user.fullname==='Guest') criteria={}
+        if (filterBy.user.fullname === 'Guest') criteria = {}
         const collection = await dbService.getCollection('board')
         var boards = await collection.find(criteria).toArray()
+        console.log("🚀 ~ file: board.service.js:13 ~ query ~ boards", boards)
         return boards
     } catch (err) {
         logger.error('cannot find boards', err)
@@ -56,14 +57,14 @@ async function add(board) {
 
 async function update(board) {
     try {
-          
-            var id = ObjectId(board._id)
-            var temp= board._id
-            delete board._id
-        // console.log(`board = `, board)
+
+        var id = ObjectId(board._id)
+        var temp = board._id
+        delete board._id
+        console.log(`board = `, board)
         const collection = await dbService.getCollection('board')
-        await collection.updateOne({ _id: id }, { $set: {...board} })
-        board._id=temp
+        await collection.updateOne({ _id: id }, { $set: { ...board } })
+        board._id = temp
         return board
     } catch (err) {
         logger.error(`cannot update board ${board._id}`, err)
@@ -86,7 +87,7 @@ async function addBoardMsg(boardId, msg) {
 async function removeBoardMsg(boardId, msgId) {
     try {
         const collection = await dbService.getCollection('board')
-        await collection.updateOne({ _id: ObjectId(boardId) }, { $pull: { msgs: {id: msgId} } })
+        await collection.updateOne({ _id: ObjectId(boardId) }, { $pull: { msgs: { id: msgId } } })
         return msgId
     } catch (err) {
         logger.error(`cannot add board msg ${boardId}`, err)
