@@ -14,7 +14,6 @@ async function query(filterBy = { title: '', user: '' }) {
         if (filterBy.user.fullname === 'Guest') criteria = {}
         const collection = await dbService.getCollection('board')
         var boards = await collection.find(criteria).toArray()
-        console.log("🚀 ~ file: board.service.js:13 ~ query ~ boards", boards)
         return boards
     } catch (err) {
         logger.error('cannot find boards', err)
