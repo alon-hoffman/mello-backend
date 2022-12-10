@@ -37,6 +37,7 @@ async function addBoard(req, res) {
   try {
     const board = req.body
     board.owner = loggedinUser
+    board.members.push(loggedinUser)
     const addedBoard = await boardService.add(board)
     res.json(addedBoard)
   } catch (err) {
