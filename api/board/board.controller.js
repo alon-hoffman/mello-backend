@@ -10,7 +10,6 @@ async function getBoards(req, res) {
       user:req.loggedinUser||''
     }
     req.loggedinUser
-    console.log(`req.loggedinUser = `, req.loggedinUser)
 
     const boards = await boardService.query(filterBy)
     res.json(boards)
