@@ -7,11 +7,11 @@ const ObjectId = require('mongodb').ObjectId
 async function query(filterBy = { title: '', user: '' }) {
     //    console.log(`filterBy = `, filterBy)
     try {
+        // if (filterBy.user.fullname === 'Guest') criteria = {}
         let criteria = {
             $or: [{ "members.fullname": filterBy.user.fullname }]
             // vendor: { $regex: filterBy.title, $options: 'i' }
         }
-        if (filterBy.user.fullname === 'Guest') criteria = {}
         const collection = await dbService.getCollection('board')
         var boards = await collection.find(criteria).toArray()
         return boards
