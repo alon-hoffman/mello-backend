@@ -5,7 +5,7 @@ const config = require('../config')
 function requireAuth(req, res, next) {
 
   if (config.isGuestMode && !req?.cookies?.loginToken) {
-    req.loggedinUser = {_id: '', fullname: 'Guest'}
+    req.loggedinUser = {_id: '', fullname: 'Guest',imgUrl:'https://res.cloudinary.com/mello123/image/upload/v1672829690/btbj9n5nzrsj7wlt7yw8.png'}
     return next()
   }
 
