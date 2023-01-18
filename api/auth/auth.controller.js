@@ -29,7 +29,7 @@ async function signup(req, res) {
         res.json(user)
     } catch (err) {
         logger.error('Failed to signup ' + err)
-        res.status(500).send({ err: 'Failed to signup' })
+        res.status(500).send({ err })
     }
 }
 
